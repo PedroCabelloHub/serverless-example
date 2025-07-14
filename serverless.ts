@@ -1,7 +1,9 @@
 import type { AWS } from '@serverless/typescript';
 
 
-import { findAll, findById, createUser, update, deleteUser } from '@functions/users';
+import { getProfile, login, logout } from '@functions/auth';
+import { createMessage, getConversation } from "@functions/chat";
+import { createUser, deleteUser, findAll, findById, update } from '@functions/users';
 
 const serverlessConfiguration: AWS = {
   service: 'sls-example',
@@ -18,9 +20,10 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+  
   },
-  // import the function via paths
-  functions: { findAll, findById, createUser, update, deleteUser },
+  // import the function via paths, 
+  functions: { findAll, findById, createUser, update, deleteUser,login,logout, getProfile, createMessage, getConversation },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -32,6 +35,9 @@ const serverlessConfiguration: AWS = {
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
+    },
+    'serverless-offline': {
+      httpPort: 4000, // 👈 Aquí defines el puerto
     },
   },
 };

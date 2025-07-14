@@ -1,9 +1,10 @@
 import { formatJSONResponse } from "@libs/api-gateway";
-import { UsersService } from "src/users/services/users.services";
-import { container } from "src/config/inversify.config";
 import { APIGatewayProxyEvent } from "aws-lambda";
+import { container } from "src/config/inversify.config";
+import { authenticatedHandler } from "src/middleware/authenticated-handler";
+import { UsersService } from "src/users/services/users.services";
 
-export const main = async (event: APIGatewayProxyEvent) => {
+export const main = authenticatedHandler( async (event:APIGatewayProxyEvent,_user) => {
   const userId = event.pathParameters.id;
   try {
     const usersService = container.get(UsersService);
@@ -33,4 +34,4 @@ export const main = async (event: APIGatewayProxyEvent) => {
       500
     );
   }
-}
+});

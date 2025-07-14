@@ -1,4 +1,5 @@
-import { injectable, inject } from "inversify";
+import { ROLES } from "@prisma/client";
+import { inject, injectable } from "inversify";
 import { PrismaService } from "src/libs/prisma";
 
 @injectable()
@@ -9,9 +10,9 @@ export class UsersRepository {
     return await this.prismaService.client.user.findMany();
   }
 
-  async save(name: string) {
+  async save(name: string,password:string, email:string, role?:ROLES) {
     return await this.prismaService.client.user.create({
-      data: { name },
+      data: { name,passwordHash:password, email , role},
     });
   }
 
@@ -24,7 +25,7 @@ export class UsersRepository {
   async update(id: number, name: string) {
     return await this.prismaService.client.user.update({
       where: { id },
-      data: { name },
+      data: { name:name },
     });
   }
 

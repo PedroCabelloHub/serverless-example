@@ -1,4 +1,6 @@
-import { injectable, inject } from "inversify";
+import { ROLES } from "@prisma/client";
+import * as bcrypt from "bcryptjs";
+import { inject, injectable } from "inversify";
 import { UsersRepository } from "src/users/repository/users.repository";
 
 @injectable()
@@ -10,9 +12,10 @@ export class UsersService {
     return await this.usersRepository.findAll();
   }
 
-  async createUser(name: string) {
+  async createUser(name: string,password:string,email:string,role?:ROLES) {
     // Validaciones, reglas de negocio
-    return await this.usersRepository.save(name);
+    const passwordHash = await bcrypt.hash(password,10)
+    return await this.usersRepository.save(name,passwordHash,email,role);
   }
 
   async getUserById(id: number) {

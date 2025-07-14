@@ -1,7 +1,8 @@
 import { formatJSONResponse } from "@libs/api-gateway";
-import { UsersService } from "src/users/services/users.services";
 import { container } from "src/config/inversify.config";
-export const main = async () => {
+import { authenticatedHandler } from "src/middleware/authenticated-handler";
+import { UsersService } from "src/users/services/users.services";
+export const main = authenticatedHandler(async (_event, _user) => {
   try {
     const usersService = container.get(UsersService);
 
@@ -30,4 +31,4 @@ export const main = async () => {
       500
     );
   }
-};
+});

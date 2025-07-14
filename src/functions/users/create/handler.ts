@@ -1,10 +1,10 @@
+import { formatJSONResponse } from "@libs/api-gateway";
 import { APIGatewayEvent } from "aws-lambda";
+import { plainToInstance } from "class-transformer";
+import { validateOrReject, ValidationError } from "class-validator";
+import { CreateUserDto } from "src/users/dto/users.dto";
 import { container } from "../../../config/inversify.config";
 import { UsersService } from "../../../users/services/users.services";
-import { formatJSONResponse } from "@libs/api-gateway";
-import { validateOrReject, ValidationError } from "class-validator";
-import { plainToInstance } from "class-transformer";
-import { CreateUserDto } from "src/users/dto/users.dto";
 
 export const main = async (event: APIGatewayEvent) => {
   try {
@@ -14,7 +14,7 @@ export const main = async (event: APIGatewayEvent) => {
 
     const usersService = container.get(UsersService);
     // ¡No olvides el await aquí!
-   const user =  await usersService.createUser(body.name);
+   const user =  await usersService.createUser(dto.name,dto.password,dto.email,dto.role);
 
     return formatJSONResponse({
       message: "User created successfully",
